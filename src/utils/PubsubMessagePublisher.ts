@@ -1,8 +1,6 @@
 import { PubSub, Topic } from '@google-cloud/pubsub';
+import { IMessagePublisher } from '../interfaces/IMessagePublisher'
 
-interface IMessagePublisher {
-    publishMessage(message: string): Promise<string>;
-}
 
 export class PubsubMessagePublisher implements IMessagePublisher {
 
