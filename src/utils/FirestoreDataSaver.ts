@@ -2,6 +2,7 @@ import { IDataSaver } from '../interfaces/IDataSaver';
 import { Firestore } from '@google-cloud/firestore';
 
 export class FirestoreDataSaver implements IDataSaver<string> {
+   
     private readonly firestoreClient: Firestore;
     private readonly collectionName: string;
     constructor(colletionName: string) {

@@ -1,6 +1,7 @@
 import { IMessagePublisher } from '../interfaces/IMessagePublisher';
 import { IDataSaver } from '../interfaces/IDataSaver';
 export class BilletService {
+    
     private readonly messagePublisher: IMessagePublisher;
     private readonly dataSaver: IDataSaver<any>;
     constructor(messagePublisher: IMessagePublisher, dataSaver: IDataSaver<any>) {

@@ -1,21 +1,64 @@
-import { PubSub, Topic } from '@google-cloud/pubsub';
 import { IMessagePublisher } from '../interfaces/IMessagePublisher'
+import { PubSub, Topic } from '@google-cloud/pubsub';
 
 
 export class PubsubMessagePublisher implements IMessagePublisher {
 
-    private readonly topic: Topic;
+    private topic!: Topic;
     private pubSubClient: PubSub;
+    private projectId?: string;
+    private topicCache: Map<string, Topic> = new Map();
 
     constructor(topicName: string, projectId?: string) {
         this.pubSubClient = new PubSub();
-        this.topic = this.pubSubClient.topic(topicName);
+        this.projectId = projectId;
+        this.initializeTopic(topicName);
+    }
+
+    async initializeTopic(topicName: string): Promise<Topic> {
+        
+        try {
+            
+            this.topic = await this.createTopicIfDoesntExists(topicName);
+            return this.topic;
+
+        } catch (error) {
+
+            console.log(`Error initializing topic:`, error);
+            throw error;
+        }
+    }
+
+    async createTopicIfDoesntExists(topicName: string): Promise<Topic> {
+
+        const topicCached = this.topicCache.get(topicName);
+        if(topicCached) {
+            return topicCached;
+        }
+    
+        const topic = await this.pubSubClient.topic(topicName);
+        const [exists] = await topic.exists();
+
+        if(!exists) {
+            console.log(`Topic ${topicName} does not exist. Creating it...`);
+            await this.pubSubClient.createTopic(topicName);
+            console.log(`Topic ${topicName} created.`);
+        } else {
+            console.log(`Topic ${topicName} already exists.`);
+        }
+        this.topicCache.set(topicName, topic);
+        return topic;
     }
 
     async publishMessage(message: string): Promise<string> {
+        
+        if (!this.topic) {
+            throw new Error('Topic is not initialized. Please ensure the publisher is properly initialized.');
+        }
 
         const dataBuffer = Buffer.from(message);
         const messageId = await this.topic.publishMessage({data: dataBuffer});
+        console.log(`Message ${messageId} published.`);
         return messageId;
     }
 
