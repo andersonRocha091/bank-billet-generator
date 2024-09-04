@@ -15,3 +15,20 @@ export const createBillet = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Error creating billet.', error})
     }
   };
+
+  export const billetGenerator = async() => {
+    
+    console.log('Billet generator started');
+    try {
+        const messagePublisher = new PubsubMessagePublisher('billet-stream', 'bank-billet-generator');
+        const subscription = await messagePublisher.subscribeToTopic('billet-stream');
+        
+        if(subscription) {
+            subscription.on('message', async (message) => {
+                console.log(`MEssage received: ${message.data}`); 
+            })
+        }   
+    } catch (error) {
+        console.error('Error on generatin a billet due', error);
+    }
+  }

@@ -25,6 +25,13 @@ functions:
     handler: createBillet
     events:
       - http: path
+  
+  billetGenerator:
+    handler: billetGenerator
+    events:
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: projects/bank-billet-generator/topics/billet-stream
   # NOTE: the following uses an "event" event (pubSub event in this case).
   # Please create the corresponding resources in the Google Cloud
   # before deploying this service through Serverless
