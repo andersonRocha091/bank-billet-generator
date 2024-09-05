@@ -20,6 +20,7 @@
   "dependencies": {
     "@google-cloud/firestore": "^7.9.0",
     "@google-cloud/pubsub": "^4.7.0",
+    "axios": "^1.7.7",
     "express": "^4.19.2",
     "serverless": "^3.28.0"
   }
