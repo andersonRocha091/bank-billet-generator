@@ -18,10 +18,9 @@ export class KobanaService implements IKobanaService {
     }
 
     async getToken(): Promise<string> {
-
         const data = `grant_type=client_credentials&client_id=${this.clientId}&client_secret=${this.clientSecret}`;
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-        const response = await this.client.post(`${this.baseUrl}/oauth2/token`, data, headers);
+        const response = await this.client.post(`${this.baseUrl}/oauth/token`, data, headers);
         return response.access_token;
         
     }
