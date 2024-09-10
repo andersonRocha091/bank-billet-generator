@@ -4,7 +4,12 @@ provider:
   name: google
   stage: dev
   runtime: nodejs16
-  region: us-east1
+  environment:
+    KOBANA_CLIENT_ID: ${env.KOBANA_CLIENT_ID}
+    KOBANA_CLIENT_SECRET: ${env.KOBANA_CLIENT_SECRET}
+    KOBANA_API_URL: ${env.KOBANA_API_URL}
+    KOBANA_AUTH_URL: ${env.KOBANA_AUTH_URL}
+  region: 'us-east1'
   project: bank-billet-generator
   credentials: keyfile.json
     
@@ -13,6 +18,7 @@ frameworkVersion: '3'
 
 plugins:
   - serverless-google-cloudfunctions
+  - serverless-dotenv-plugin
 
 package:
   exclude:

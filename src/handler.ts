@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-
+import * as dotenv from 'dotenv'
+dotenv.config();
 import { BilletService }  from './services/BilletService';
 import { PubsubMessagePublisher } from './utils/PubsubMessagePublisher';
 import { FirestoreDataSaver } from './utils/FirestoreDataSaver';
@@ -19,30 +20,6 @@ export const createBillet = async (req: Request, res: Response) => {
     }
   };
 
-//   export const billetGenerator = async() => {
-    
-//     console.log('Billet generator started');
-//     const httpClient = new HttpClient();
-//     const kobanaService = new KobanaService(httpClient, 
-//                             'IIR19iM_D6xxEPu1W5vwe76-qkP-nx0GVzmD7LxIiEo', 
-//                             'nM28S_cXJe_nGQbTnhJuVu7hIBkBZJglGzVMNzoij2I', 
-//                             'https://app-sandbox.kobana.com.br');
-//     try {
-//         const messagePublisher = new PubsubMessagePublisher('billet-stream', 'bank-billet-generator');
-//         const subscription = await messagePublisher.subscribeToTopic('billet-stream');
-        
-//         if(subscription) {
-//             subscription.on('message', async (message) => {
-//                 console.log(`MEssage received: ${message.data}`); 
-//                 const token = await kobanaService.getToken();
-//                 console.log(`TOKEN: ${token}`);
-//             })
-//         }   
-//     } catch (error) {
-//         console.error('Error on generatin a billet due', error);
-//     }
-//   }
-
 export const billetGenerator = async () => {
 
     console.log('Billet generator started');
@@ -54,13 +31,16 @@ export const billetGenerator = async () => {
     //client default para requisicoes http
     const httpClient = new HttpClient();
     //Servico de emissao de boletos
+    const { KOBANA_CLIENT_ID, KOBANA_CLIENT_SECRET, KOBANA_API_URL, KOBANA_AUTH_URL} = process.env;
+    console.log('configs: ',  KOBANA_CLIENT_ID, KOBANA_CLIENT_SECRET, KOBANA_API_URL, KOBANA_AUTH_URL)
     const kobanaService = new KobanaService(
         httpClient,
-        'IIR19iM_D6xxEPu1W5vwe76-qkP-nx0GVzmD7LxIiEo',
-        'nM28S_cXJe_nGQbTnhJuVu7hIBkBZJglGzVMNzoij2I',
-        'https://app-sandbox.kobana.com.br'
+        KOBANA_CLIENT_ID ?? 'IIR19iM_D6xxEPu1W5vwe76-qkP-nx0GVzmD7LxIiEo',
+        KOBANA_CLIENT_SECRET ?? 'nM28S_cXJe_nGQbTnhJuVu7hIBkBZJglGzVMNzoij2I',
+        KOBANA_API_URL ?? 'https://api-sandbox.kobana.com.br',
+        KOBANA_AUTH_URL ?? 'https://app-sandbox.kobana.com.br'
     );
-
+    
     const billetService = new BilletService(messagePublisher, new FirestoreDataSaver('billets'), kobanaService, messagePublisher);
     await billetService.generateBillet();
     
