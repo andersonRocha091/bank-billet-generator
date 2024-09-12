@@ -1,3 +1,4 @@
 export interface IMessagePublisher {
-    publishMessage(message: string): Promise<string>;
+    publishMessage(message: string, topicName: string): Promise<string>;
+    setTopicName(topicName: string): void;
 }

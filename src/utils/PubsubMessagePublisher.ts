@@ -12,16 +12,17 @@ import { PubSubSubscriber } from './PubSubSubscriber';
 export class PubsubMessagePublisher implements IMessagePublisher {
 
     private topic!: Topic;
+    private topicName: string;
     private pubSubClient: PubSub;
     private projectId?: string;
     private topicCache: Map<string, Topic> = new Map();
     private subscriber: ISubscriber;
 
-    constructor(topicName: string, projectId?: string) {
+    constructor(projectId?: string) {
         this.pubSubClient = new PubSub();
         this.projectId = projectId;
         this.subscriber = new PubSubSubscriber(projectId);
-        this.initializeTopic(topicName);
+        this.topicName = '';
     }
 
     async initializeTopic(topicName: string): Promise<Topic> {
@@ -45,24 +46,30 @@ export class PubsubMessagePublisher implements IMessagePublisher {
             return topicCached;
         }
     
-        const topic = await this.pubSubClient.topic(topicName);
-        const [exists] = await topic.exists();
+        let topicToConnect = await this.pubSubClient.topic(topicName);
+        const [exists] = await topicToConnect.exists();
 
         if(!exists) {
             console.log(`Topic ${topicName} does not exist. Creating it...`);
-            await this.pubSubClient.createTopic(topicName);
+            const[topic] = await this.pubSubClient.createTopic(topicName);
+            topicToConnect = topic;
             console.log(`Topic ${topicName} created.`);
         } else {
             console.log(`Topic ${topicName} already exists.`);
         }
-        this.topicCache.set(topicName, topic);
-        return topic;
+        this.topicCache.set(topicName, topicToConnect);
+        return topicToConnect;
     }
 
-    async publishMessage(message: string): Promise<string> {
+    setTopicName(topicName: string): void {
+        this.topicName = topicName;
+    }
+
+    async publishMessage(message: string, topicName: string): Promise<string> {
         
         if (!this.topic) {
-            throw new Error('Topic is not initialized. Please ensure the publisher is properly initialized.');
+            console.log(`INITIALIZING NEW TOPIC: ${topicName}`);
+            await this.initializeTopic(topicName);
         }
 
         const dataBuffer = Buffer.from(message);

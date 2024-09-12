@@ -31,6 +31,7 @@ export class BilletService {
                 customer_zipcode: invoiceData.customer_zipcode,
                 customer_address: invoiceData.customer_address,
                 customer_neighborhood: invoiceData.customer_neighborhood,
+                customer_email: invoiceData.customer_email,
                 interest_type: invoiceData.interest_type,
                 interest_days_type: invoiceData.interest_days_type,
                 fine_type: invoiceData.fine_type,
@@ -52,7 +53,8 @@ export class BilletService {
             console.log('Billet data validated');
             const docId = await this.dataSaver.saveData({...invoiceData, billet: billetData.getData()});
             const message = JSON.stringify({message: 'Billet created',docId: docId, billetData: billetData.getData()});
-            const messageId = await this.messagePublisher.publishMessage(message);
+            this.messagePublisher.setTopicName('billet-stream');
+            const messageId = await this.messagePublisher.publishMessage(message, 'billet-stream');
         } catch (error: any) {
             console.log(`Error creating billet: ${error.message}`);
         }
@@ -81,6 +83,7 @@ export class BilletService {
                         customer_zipcode: messageData.billetData.customer_zipcode,
                         customer_address: messageData.billetData.customer_address,
                         customer_neighborhood: messageData.billetData.customer_neighborhood,
+                        customer_email: messageData.billetData.customer_email,
                         interest_type: messageData.billetData.interest_type,
                         interest_days_type: messageData.billetData.interest_days_type,
                         fine_type: messageData.billetData.fine_type,

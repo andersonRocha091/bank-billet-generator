@@ -10,7 +10,8 @@ import { HttpClient } from './client/HttpClient';
 export const createBillet = async (req: Request, res: Response) => {
     try {
         const invoiceData = req.body;
-        const messagePublisher = new PubsubMessagePublisher('billet-stream', 'bank-billet-generator');
+        const messagePublisher = new PubsubMessagePublisher('bank-billet-generator');
+        messagePublisher.setTopicName('billet-stream');
         const dataSaver = new FirestoreDataSaver('billets');
         const billetService = new BilletService(messagePublisher, dataSaver);
         await billetService.createBillet(invoiceData);
@@ -27,7 +28,8 @@ export const billetGenerator = async () => {
     const subscriptionName = 'bank-billet-generator';
 
     // Servico responsavel por inscricao/subscricao em topicos
-    const messagePublisher = new PubsubMessagePublisher(topicName, subscriptionName);
+    const messagePublisher = new PubsubMessagePublisher(subscriptionName);
+    messagePublisher.setTopicName(topicName);
     //client default para requisicoes http
     const httpClient = new HttpClient();
     //Servico de emissao de boletos
