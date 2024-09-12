@@ -32,7 +32,6 @@ export const billetGenerator = async () => {
     const httpClient = new HttpClient();
     //Servico de emissao de boletos
     const { KOBANA_CLIENT_ID, KOBANA_CLIENT_SECRET, KOBANA_API_URL, KOBANA_AUTH_URL} = process.env;
-    console.log('configs: ',  KOBANA_CLIENT_ID, KOBANA_CLIENT_SECRET, KOBANA_API_URL, KOBANA_AUTH_URL)
     const kobanaService = new KobanaService(
         httpClient,
         KOBANA_CLIENT_ID ?? 'IIR19iM_D6xxEPu1W5vwe76-qkP-nx0GVzmD7LxIiEo',

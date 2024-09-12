@@ -44,6 +44,10 @@ export class BankBilletData {
             throw new Error('Customer city name is required');
         }
 
+        if(!this.data.customer_email) {
+            throw new Error('Customer email is required');
+        }
+
         if(!this.data.customer_zipcode) {
             throw new Error('Customer zipcode is required');
         }
@@ -58,10 +62,6 @@ export class BankBilletData {
 
         if(!this.data.acceptance) {
             throw new Error('Acceptance is required');
-        }
-
-        if(!this.data.pix_txid) {
-            throw new Error('Pix TXID is required');
         }
 
         if(!this.data.recipient_account) {

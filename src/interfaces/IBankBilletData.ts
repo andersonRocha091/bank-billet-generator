@@ -95,7 +95,7 @@ export interface IBankBilletData {
     split_accounts?: string | null;
     payment_place?: string | null;
     cancellation_reason?: string | null;
-    pix_txid?: string;
+    pix_txid?: string|null;
     prevent_pix?: boolean;
     recipient_account?: string;
     reduction_amount?: number | null;
