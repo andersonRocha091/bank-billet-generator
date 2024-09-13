@@ -1,5 +1,12 @@
 # Billet Generator e Email Sender
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D14-brightgreen.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-%3E%3D4-blue.svg)
+![Last Commit](https://img.shields.io/github/last-commit/andersonRocha091/bank-billet-generator.svg)
+![Open Issues](https://img.shields.io/github/issues/andersonRocha091/bank-billet-generator.svg)
+![PRs](https://img.shields.io/github/issues-pr/andersonRocha091/bank-billet-generator.svg)
+
 ## Descrição
 
 Este projeto é uma aplicação serverless que gera boletos e envia e-mails usando serviços de terceiros. Utiliza a biblioteca Pub/Sub para gerenciar as mensagens e a biblioteca Axios para fazer requisições HTTP.
