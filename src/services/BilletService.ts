@@ -102,6 +102,15 @@ export class BilletService {
                       });
                     const response = await this.kobanaService?.createBillet(billetData, token);
                     console.log('RESPONSE BILLET: ', response);
+
+                    const emailIssuerPayload = {
+                        billetUrl: response.url,
+                        email: response.customer_email
+                    }
+
+                    const messageEmailPayload = JSON.stringify({message: 'Billet Generated', data: emailIssuerPayload});
+                    this.messagePublisher.setTopicName('email-sender');
+                    const messageId = await this.messagePublisher.publishMessage(messageEmailPayload, 'email-sender');
                     message.ack();
                 } catch (error) {
                     console.error('Error on processing a message', error);

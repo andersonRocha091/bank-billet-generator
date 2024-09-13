@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
-import * as dotenv from 'dotenv'
+import * as dotenv from 'dotenv';
+// import MailGun from 'mailgun-js';
+// import * as FormData from 'form-data';
 dotenv.config();
 import { BilletService }  from './services/BilletService';
+import { MailGunEmailService }  from './services/MailGunEmailService';
 import { PubsubMessagePublisher } from './utils/PubsubMessagePublisher';
 import { FirestoreDataSaver } from './utils/FirestoreDataSaver';
 import { KobanaService } from './services/KobanaService';
 import { HttpClient } from './client/HttpClient';
+import { EmailService } from './services/EmailService';
 
 export const createBillet = async (req: Request, res: Response) => {
     try {
@@ -45,4 +49,16 @@ export const billetGenerator = async () => {
     const billetService = new BilletService(messagePublisher, new FirestoreDataSaver('billets'), kobanaService, messagePublisher);
     await billetService.generateBillet();
     
+};
+
+export const emailSender = async () => {
+        
+    const mailGunApiKey = process.env.MAILGUN_API_KEY ?? '';
+    const mailGunDomain = process.env.MAILGUN_DOMAIN ?? '';
+    const messagePublisher = new PubsubMessagePublisher('bank-billet-generator');
+    messagePublisher.setTopicName('email-sender');
+    const emailServiceProvider = new MailGunEmailService(mailGunApiKey, mailGunDomain);
+    const emailService = new EmailService(messagePublisher, emailServiceProvider);
+    await emailService.start().catch(console.error);
+
 };
