@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-// import MailGun from 'mailgun-js';
-// import * as FormData from 'form-data';
 dotenv.config();
 import { BilletService }  from './services/BilletService';
 import { MailGunEmailService }  from './services/MailGunEmailService';
@@ -40,8 +38,8 @@ export const billetGenerator = async () => {
     const { KOBANA_CLIENT_ID, KOBANA_CLIENT_SECRET, KOBANA_API_URL, KOBANA_AUTH_URL} = process.env;
     const kobanaService = new KobanaService(
         httpClient,
-        KOBANA_CLIENT_ID ?? 'IIR19iM_D6xxEPu1W5vwe76-qkP-nx0GVzmD7LxIiEo',
-        KOBANA_CLIENT_SECRET ?? 'nM28S_cXJe_nGQbTnhJuVu7hIBkBZJglGzVMNzoij2I',
+        KOBANA_CLIENT_ID ?? '',
+        KOBANA_CLIENT_SECRET ?? '',
         KOBANA_API_URL ?? 'https://api-sandbox.kobana.com.br',
         KOBANA_AUTH_URL ?? 'https://app-sandbox.kobana.com.br'
     );
