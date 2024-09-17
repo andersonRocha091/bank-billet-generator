@@ -22,7 +22,12 @@
   "description": "",
   "dependencies": {
     "@google-cloud/firestore": "^7.9.0",
+    "@google-cloud/opentelemetry-cloud-trace-exporter": "^2.3.0",
     "@google-cloud/pubsub": "^4.7.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.50.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
+    "@opentelemetry/sdk-node": "^0.53.0",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
