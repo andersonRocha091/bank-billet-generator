@@ -73,9 +73,6 @@ export const emailSender = async () => {
 
         ErrorHandler.handleError(span, error);
 
-    } finally {
-
-        span.end();
     }
 
 };
