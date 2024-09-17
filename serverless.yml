@@ -12,7 +12,6 @@ provider:
     MAILGUN_API_KEY: ${env.MAILGUN_API_KEY}
     MAILGUN_DOMAIN: ${env.MAILGUN_DOMAIN}
     OTLP_EXPORTER_OTLP_TRACES_ENDPOINT: ${env.OTLP_EXPORTER_OTLP_TRACES_ENDPOINT}
-    OTEL_SERVICE_NAME: billet-generator-telemetry-service
   region: 'us-east1'
   project: bank-billet-generator
   credentials: keyfile.json

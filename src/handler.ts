@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { SpanStatusCode, trace } from '@opentelemetry/api';
+
 import './OpenTelemetry.config';
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -71,6 +72,10 @@ export const emailSender = async () => {
     } catch (error) {
 
         ErrorHandler.handleError(span, error);
+
+    } finally {
+
+        span.end();
     }
 
 };
