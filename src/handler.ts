@@ -1,78 +1,82 @@
 import { Request, Response } from 'express';
-import { SpanStatusCode, trace } from '@opentelemetry/api';
-
-import './OpenTelemetry.config';
 import * as dotenv from 'dotenv';
+import * as admin from 'firebase-admin';
 dotenv.config();
-const tracer = trace.getTracer('billet-generator','1.0.0');
-
+admin.initializeApp();
 
 import { BilletServiceFactory } from './factory/BilletServiceFactory';
 import { EmailFactory } from './factory/EmailServiceFactory';
 import { ErrorHandler } from './utils/ErrorHandler';
+import { LoggerService} from './services/LoggerService';
 
 export const createBillet = async (req: Request, res: Response) => {
-    
-    const span = tracer.startSpan('createBilletTrace');
-    span.setAttribute('http.method', req.method);
-    span.setAttribute('http.url', req.originalUrl);
+
+    const startTime = Date.now();
+    LoggerService.log('Creating billet function started');
 
     try {
+        
         const invoiceData = req.body;
-        span.setAttribute('invoiceData', JSON.stringify(invoiceData));
         const billetService = BilletServiceFactory.create();;
         await billetService.createBillet(invoiceData);
 
-        span.setStatus({code: SpanStatusCode.OK});
-        span.setAttribute('invoiceData', invoiceData);
-        span.end(); 
+        LoggerService.log(`Billet created successfully for invoiceData: ${JSON.stringify(invoiceData)}`);
         res.status(200).send('Billet created successfully.');   
+
     } catch (error) {
-        
-        ErrorHandler.handleError(span, error, (error) => {
+        LoggerService.error('Error creating billet.', error as Error);
+        ErrorHandler.handleError(error, (error) => {
             res.status(500).json({message: 'Error creating billet.', error});
         });
 
+    } finally {
+        LoggerService.timming(startTime, 'createBillet function');
     }
 
   };
 
 export const billetGenerator = async () => {
 
-    console.log('Billet generator started');
-    const span = tracer.startSpan('billetGeneratorTrace');
+    const startTime = Date.now();
+    LoggerService.log('Billet generator started');
 
     try {
-        span.setAttribute('operation', 'billetGenerator');
-        const billetService = BilletServiceFactory.create();
-        await billetService.generateBillet();   
 
-        span.setStatus({code: SpanStatusCode.OK});
-        span.end();
+        const billetService = BilletServiceFactory.create();
+        await billetService.generateBillet();
+        
+        LoggerService.log('Billet generated successfully.');
+
     } catch (error) {
 
-       ErrorHandler.handleError(span, error);
+        LoggerService.error('Error generating billet', error as Error);
+        ErrorHandler.handleError(error);
+
+    } finally{
+
+        LoggerService.timming(startTime, 'billetGenerator function');
     }
 
 };
 
 export const emailSender = async () => {
-
-    const span = tracer.startSpan('emailSenderTrace');    
+    
+    const startTime = Date.now();
+    LoggerService.log('Email sender function started');
 
     try {
-        span.setAttribute('operation', 'startEmailService');
+
         const emailService = EmailFactory.create();
         await emailService.start();
-
-        span.setAttribute('emailStatus', 'sent');
-        span.setStatus({code: SpanStatusCode.OK});
-        span.end();
+        LoggerService.log('Email sent successfully.');
 
     } catch (error) {
 
-        ErrorHandler.handleError(span, error);
+        LoggerService.error('Error sending email', error as Error);
+        ErrorHandler.handleError(error);
 
+    } finally {
+        LoggerService.timming(startTime, 'emailSender function');
     }
 
 };
