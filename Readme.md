@@ -34,13 +34,13 @@ Este projeto é uma aplicação serverless que gera boletos e envia e-mails usan
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/seu-usuario/seu-repositorio.git
+    git clone https://github.com/andersonRocha091/bank-billet-generator.git
     ```
 
 2. Navegue até o diretório do projeto:
 
     ```bash
-    cd seu-repositorio
+    cd bank-billet-generator
     ```
 
 3. Instale as dependências:
@@ -62,10 +62,10 @@ Este projeto é uma aplicação serverless que gera boletos e envia e-mails usan
 
 ## Uso
 
-1. Inicie a aplicação:
+1. Faça deploy de sua aplicacao em sua conta do Google Cloud Platform:
 
     ```bash
-    npm start
+    npm deploy
     ```
 
 2. A aplicação irá gerar boletos e enviar e-mails automaticamente conforme a configuração.
@@ -79,6 +79,7 @@ Este projeto é uma aplicação serverless que gera boletos e envia e-mails usan
   - `src/interfaces/`: Pasta contendo interfaces e tipos.
   - `src/services/`: Pasta os serviços que implementam a logica de negocios da aplicacao
   - `src/validation/`: Pasta com classes tipadas para validacao de dados
+  - `src/factory`: Pasta contendo classes de fábrica para criar instâncias de serviços e clientes.
 - `package.json`: Arquivo contendo as dependências e scripts do projeto.
 
 ## Contribuição
