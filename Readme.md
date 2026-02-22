@@ -72,15 +72,18 @@ Este projeto é uma aplicação serverless que gera boletos e envia e-mails usan
 
 ## Arquivos e Pastas
 
+- `tests/`: Pasta contendo os testes unitários do projeto.
 - `src/`: Pasta contendo o código fonte da aplicação.
-  - `src/handler.ts`: Arquivo com os entrypoints para execucao da aplicacao
-  - `src/client`: Clientes para conexao externa à aplicacao
-  - `src/utils/`: Pasta contendo funções auxiliares.
-  - `src/interfaces/`: Pasta contendo interfaces e tipos.
-  - `src/services/`: Pasta os serviços que implementam a logica de negocios da aplicacao
-  - `src/validation/`: Pasta com classes tipadas para validacao de dados
-  - `src/factory`: Pasta contendo classes de fábrica para criar instâncias de serviços e clientes.
+  - `src/handler.ts`: Arquivo com os entrypoints para execução da aplicação (HTTP e Pub/Sub).
+  - `src/usecases/`: Pasta contendo a lógica de aplicação (casos de uso), que orquestra as operações do domínio e dos adaptadores.
+  - `src/domain/`: Pasta contendo as entidades e objetos de valor do domínio, encapsulando regras de negócio e protegendo seus invariantes.
+  - `src/client/`: Clientes para conexão externa à aplicação (ex: cliente HTTP).
+  - `src/utils/`: Pasta contendo funções auxiliares e adaptadores de infraestrutura (ex: Pub/Sub, Firestore).
+  - `src/interfaces/`: Pasta contendo as interfaces (ports) que definem os contratos do domínio com o mundo externo.
+  - `src/services/`: Pasta contendo os adaptadores de saída que implementam as interfaces (ports) para serviços externos (ex: Kobana, Mailgun).
+  - `src/factory/`: Pasta contendo classes de fábrica para criar e configurar instâncias dos casos de uso e serviços.
 - `package.json`: Arquivo contendo as dependências e scripts do projeto.
+- `jest.config.js`: Arquivo de configuração do Jest para os testes unitários.
 
 ## Contribuição
 

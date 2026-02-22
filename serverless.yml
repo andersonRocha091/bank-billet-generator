@@ -41,6 +41,13 @@ functions:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
           resource: projects/bank-billet-generator/topics/billet-stream
+          retryPolicy:
+            minimumBackoff: 15s
+            maximumBackoff: 300s
+    onFailure:
+      deadLetterPolicy:
+        topicName: projects/bank-billet-generator/topics/billet-stream-dlq
+        maxRetries: 5
   
   emailSender:
     handler: emailSender
@@ -48,6 +55,14 @@ functions:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
           resource: projects/bank-billet-generator/topics/email-sender
+          retryPolicy:
+            minimumBackoff: 15s
+            maximumBackoff: 300s
+    onFailure:
+      deadLetterPolicy:
+        topicName: projects/bank-billet-generator/topics/email-sender-dlq
+        maxRetries: 5
+
   # NOTE: the following uses an "event" event (pubSub event in this case).
   # Please create the corresponding resources in the Google Cloud
   # before deploying this service through Serverless

@@ -1,6 +1,7 @@
 import { IHttpClient } from '../interfaces/IHttpClient';
 import { IBoletoService } from '../interfaces/IBoletoService';
-import { BankBilletData } from '../validation/BankBilletData';
+import { RegisteredBillet } from '../domain/RegisteredBillet';
+import { BankBillet } from '../domain/BankBillet';
 
 
 
@@ -28,19 +29,25 @@ export class KobanaService implements IBoletoService{
         
     }
 
-    async createBillet(data: BankBilletData, token: string): Promise<any> {
+    async createBillet(billet: BankBillet, token: string): Promise<RegisteredBillet> {
 
         try {
 
-            data.validate();
             this.client.setAuthToken(token);
-            const response = await this.client.post(`${this.baseUrl}/v1/bank_billets`, data.getData());
-            console.log('RESPONSE: ', response);
-            return response;
+            const response = await this.client.post(`${this.baseUrl}/v1/bank_billets`, billet.getData());
+            console.log('Kobana API Response: ', response);
+
+            const registeredBillet: RegisteredBillet = {
+                id: response.id,
+                url: response.url,
+                barcode: response.barcode,
+                customerEmail: response.customer_email
+            }
+            return registeredBillet;
 
         } catch (error) {
             console.log('ERROR RESQUEST: ', JSON.stringify(error));
-            throw new Error(`Error creating billet: ${error}`);
+            throw new Error(`Error creating billet via kobana: ${error}`);
         }
 
     }
